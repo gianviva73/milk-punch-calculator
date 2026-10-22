@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masterclass Milk Punch Calculator</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #131b2e;
+            --inner-box: #1a233a;
+            --accent-yellow: #f39c12; /* Giallo ocra elegante */
+            --accent-orange: #e67e22;
+            --accent-green: #2ecc71;
+            --text-color: #ffffff;
+            --text-muted: #94a3b8;
+            --border-color: #27354f;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 30px;
+        }
+        .main-wrapper {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+        /* Stile Titolo Superiore */
+        .top-banner {
+            background: var(--card-bg);
+            border: 2px solid var(--accent-yellow);
+            border-radius: 12px;
+            padding: 20px 25px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+        }
+        .top-banner h1 {
+            font-size: 1.6rem;
+            color: var(--accent-yellow);
+            margin: 0 0 8px 0;
+            letter-spacing: 0.5px;
+        }
+        .top-banner p {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            margin: 0;
+        }
+        /* Contenitore Principale */
+        .container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 35px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+        .section-title {
+            font-size: 1.3rem;
+            color: var(--accent-yellow);
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+        }
+        .input-row {
+            display: flex;
+            gap: 15px;
+        }
+        .input-box {
+            flex: 1;
+        }
+        .input-box span {
+            display: block;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+        }
+        input, select {
+            width: 100%;
+            padding: 15px;
+            background: var(--inner-box);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: white;
+            font-size: 1.1rem;
+            box-sizing: border-box;
+        }
+        input:focus, select:focus {
+            border-color: var(--accent-yellow);
+            outline: none;
+        }
+        .btn-calc {
+            width: 100%; 
+            background: var(--accent-green); 
+            color: #0b0f19; 
+            border: none; 
+            padding: 16px; 
+            border-radius: 8px; 
+            font-size: 1.2rem; 
+            font-weight: bold; 
+            cursor: pointer; 
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+        .btn-calc:hover {
+            background: #27ae60;
+            color: #fff;
+        }
+        /* Box Risultati grande e pulito */
+        .results-box {
+            background: var(--inner-box);
+            border: 2px solid var(--accent-green);
+            padding: 25px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+        .results-box h3 {
+            margin-top: 0;
+            color: var(--accent-green);
+            font-size: 1.3rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 18px 0;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .badge {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+        .badge-green { background: #1b4d3e; color: #2ecc71; border: 1px solid #2ecc71; }
+        .badge-yellow { background: #4d3d1b; color: #f39c12; border: 1px solid #f39c12; }
+        
+        .val-num {
+            font-size: 1.4rem;
+        }
+        
+        /* Bottone Guida in alto */
+        .btn-guide-container {
+            text-align: right;
+            margin-bottom: 15px;
+        }
+        .btn-guide {
+            background-color: transparent;
+            border: 1px solid var(--accent-yellow);
+            color: var(--accent-yellow);
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .btn-guide:hover {
+            background-color: var(--accent-yellow);
+            color: #0b0f19;
+        }
+
+        /* Modale Guida */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+        .modal-content {
+            background: var(--card-bg);
+            border: 2px solid var(--accent-yellow);
+            padding: 35px;
+            border-radius: 12px;
+            max-width: 550px;
+            width: 90%;
+            position: relative;
+        }
+        .close-modal {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 1.8rem;
+            color: var(--accent-yellow);
+            cursor: pointer;
+        }
+        .modal-content h2 {
+            color: var(--accent-yellow);
+            margin-top: 0;
+            font-size: 1.4rem;
+        }
+        .modal-content ul {
+            padding-left: 20px;
+            line-height: 1.7;
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-wrapper">
+    <!-- Banner Superiore con il nome corretto del programma -->
+    <div class="top-banner">
+        <h1>🧪 MASTERCLASS MILK PUNCH CALCULATOR 🎓</h1>
+        <p>Capitolo 23 — Calcolatore Chiarificazione & Proporzioni Proteiche</p>
+    </div>
+
+    <div class="btn-guide-container">
+        <button class="btn-guide" onclick="openGuide()">❓ Guida all'Uso</button>
+    </div>
+
+    <div class="container">
+        <div class="section-title">🧮 Calcolatore Proporzionale Chiarificazione</div>
+
+        <div class="form-group">
+            <label>1. Inserisci la quantità del liquido base (scegli ml o grammi):</label>
+            <div class="input-row">
+                <div class="input-box">
+                    <input type="number" id="volumeMl" placeholder="Es. 1000" oninput="pulisciAltro('ml')">
+                    <span>Millilitri (ml)</span>
+                </div>
+                <div class="input-box">
+                    <input type="number" id="pesoGrammi" placeholder="Es. 1000" oninput="pulisciAltro('g')">
+                    <span>Grammi (g)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="tipoLatte">2. Seleziona la tipologia di latte o bevanda vegetale:</label>
+            <select id="tipoLatte">
+                <optgroup label="Latti Animali (Tradizionali)">
+                    <option value="0.18">Latte Intero Fresco di Alta Qualità (18% - Consigliato)</option>
+                    <option value="0.15">Latte Intero UHT (15% - Standard)</option>
+                    <option value="0.20">Latte Parzialmente Scremato (20% - Richiede più acidità)</option>
+                    <option value="0.12">Panna Liquida 35% (12% - Ricco e vellutato)</option>
+                </optgroup>
+                <optgroup label="Bevande Vegetali (Alternative Moderne)">
+                    <option value="0.22">Bevanda di Soia (22% - Ottima coagulazione proteica)</option>
+                    <option value="0.20">Bevanda di Mandorla (20% - Nota aromatica delicata)</option>
+                    <option value="0.22">Bevanda d'Avena (22% - Struttura corposa)</option>
+                    <option value="0.25">Bevanda di Cocco (25% - Ricca di grassi vegetali)</option>
+                    <option value="0.20">Bevanda di Riso (20% - Più leggera)</option>
+                </optgroup>
+            </select>
+        </div>
+
+        <button class="btn-calc" onclick="calcolaMilkPunch()">Calcola Proporzioni</button>
+
+        <div class="results-box" id="risultati" style="display: none;">
+            <h3>Risultati di Laboratorio</h3>
+            
+            <div class="result-row">
+                <span>Latte Necessario:</span>
+                <div>
+                    <span class="badge badge-yellow">Dose Ideale</span>
+                    <span class="val-num" id="resLattex" style="color: var(--accent-yellow); margin-left: 10px;">0 ml</span>
+                </div>
+            </div>
+            
+            <div style="border-top: 1px solid var(--border-color); margin: 10px 0;"></div>
+
+            <div class="result-row">
+                <span>Massa Totale in Filtrazione:</span>
+                <div>
+                    <span class="badge badge-green">Totale Massa</span>
+                    <span class="val-num" id="resTotalex" style="color: var(--accent-green); margin-left: 10px;">0 ml</span>
+                </div>
+            </div>
+
+            <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 20px; line-height: 1.5;">
+                <em>Nota tecnica:</em> Ricorda di versare sempre lentamente il liquido acido/alcolico nel latte freddo (e mai il contrario) per innescare correttamente il taglio proteico.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Finestra Modale Guida all'Uso -->
+<div class="modal" id="guideModal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeGuide()">&times;</span>
+        <h2>Guida all'Uso del Tool</h2>
+        <ul>
+            <li><strong>Inserisci la quantità:</strong> Compila il campo in <em>Millilitri (ml)</em> se misuri a volume, oppure in <em>Grammi (g)</em> se usi la bilancia.</li>
+            <li><strong>Seleziona la base:</strong> Scegli il tipo di latte o bevanda vegetale in base al profilo proteico desiderato.</li>
+            <li><strong>Avvia il calcolo:</strong> Clicca sul bottone verde per visualizzare subito le quantità grandi e leggibili senza alcuno sforzo visivo.</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    function pulisciAltro(tipo) {
+        if (tipo === 'ml') {
+            document.getElementById('pesoGrammi').value = '';
+        } else {
+            document.getElementById('volumeMl').value = '';
+        }
+    }
+
+    function calcolaMilkPunch() {
+        const mlVal = parseFloat(document.getElementById('volumeMl').value);
+        const gVal = parseFloat(document.getElementById('pesoGrammi').value);
+        const percentuale = parseFloat(document.getElementById('tipoLatte').value);
+
+        let quantitaBase = 0;
+        let unitaMisura = '';
+
+        if (!isNaN(mlVal) && mlVal > 0) {
+            quantitaBase = mlVal;
+            unitaMisura = 'ml';
+        } else if (!isNaN(gVal) && gVal > 0) {
+            quantitaBase = gVal;
+            unitaMisura = 'g';
+        } else {
+            alert("Inserisci un valore numerico valido in Millilitri o in Grammi!");
+            return;
+        }
+
+        const qtaLatte = quantitaBase * percentuale;
+        const massaTotale = quantitaBase + qtaLatte;
+
+        document.getElementById('resLattex').innerText = `${qtaLatte.toFixed(0)} ${unitaMisura}`;
+        document.getElementById('resTotalex').innerText = `${massaTotale.toFixed(0)} ${unitaMisura}`;
+        
+        document.getElementById('risultati').style.display = 'block';
+    }
+
+    function openGuide() {
+        document.getElementById('guideModal').style.display = 'flex';
+    }
+
+    function closeGuide() {
+        document.getElementById('guideModal').style.display = 'none';
+    }
+</script>
+
+</body>
+</html>
